@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>
+*{
+	margin:0;
+	padding:0;
+}
+.container{
+	margin:30px auto;
+	height:44px;
+	width:600px;
+}
+#com,ul,#alert{
+	float:left;
+}
+#com{
+	height:44px;
+	line-height:44px;
+}
+ul{
+	height:44px;
+	overflow:hidden;
+}
+ul li{
+	float:left;
+	list-style:none;
+	height:44px;
+}
+ul img{
+	height:22px;
+	margin-top:9px;
+}
+#des{
+	height:44px;
+	line-height:44px;
+	margin-left:20px;
+	float:left;
+	display:none;
+}
+</style>
+</head>
+<script>
+window.onload=function(){
+	var aUi=document.getElementById("stars");
+	var alert=document.getElementById("alert");
+	var des=document.getElementById("des");
+	var comments=["很差","较差","还行","推荐","力荐"];
+	var onOff=true;//总开关控制鼠标移出是否会恢复原色
+	var flag;//记录点击的是哪一个li的index值
+
+	var aLi=document.getElementsByTagName("li");
+	for (var i=0;i<aLi.length ;i++ )
+	{
+		aLi[i].index=i;
+		//鼠标移入
+
+		aLi[i].onmouseover=function(){
+			alert.style.display="none";
+			des.style.display="block";
+			des.innerHTML=comments[this.index];
+			//鼠标移入 设置每个星星的颜色
+			/*for (var j=0;j<= this.index;j++ )//封装起来 以后使用方便
+			{
+				if (j<2)
+				{
+					aLi[j].getElementsByTagName("img")[0].src="dark.jpg";
+				}else {
+					aLi[j].getElementsByTagName("img")[0].src="yellow.jpg";				
+				}
+			}*/
+			changgeColor(this);
+		};
+
+		//鼠标移出
+		aLi[i].onmouseout=function(){
+			//如果没有点击 就是说如果总开关是开着的 那么 所有星星恢复原来的颜色 同时右边的提示图片显示 提示文字隐藏
+			if (onOff==true)
+			{
+				for (var j=0;j<= this.index;j++ )
+				{
+					aLi[j].getElementsByTagName("img")[0].src="light.jpg";
+				}
+				alert.style.display="block";
+				des.style.display="none";
+			}
+			//如果已经点击过了 onOff是关闭了 假设flag是3 this.index是5 那就清除4 5；假设flag是3 this.index是1 2 4 那就什么也不干
+			if (onOff==false)
+			{
+				if (this.index>flag)
+				{
+					for (var n=flag+1;n<=this.index ;n++ )
+					{
+						aLi[n].getElementsByTagName("img")[0].src="light.jpg";
+					}
+				}
+				des.innerHTML=comments[flag];
+			}
+
+		};
+
+		//鼠标点击
+		aLi[i].onclick=function(){
+			//鼠标点击 总开关关闭
+			onOff=false;
+			alert.style.display="none";
+			des.style.display="block";
+			des.innerHTML=comments[this.index];
+			changgeColor(this);//变色代码块 函数封装起来
+
+			//如果flag是4 当前选择2 就恢复3 4的图片为原始值
+			if (this.index<flag)
+			{
+				for (var n=this.index+1;n<=flag ;n++ )
+				{
+					aLi[n].getElementsByTagName("img")[0].src="light.jpg";
+				}
+			}
+
+			//每点击一次 就记录这个点击的li的索引值
+			flag=this.index;
+		};
+	}
+
+	//变色代码块 封装起来
+	function changgeColor(that){
+		for (var j=0;j<= that.index;j++ )
+		{
+			if (j<2)
+			{
+				aLi[j].getElementsByTagName("img")[0].src="dark.jpg";
+			}else {
+				aLi[j].getElementsByTagName("img")[0].src="yellow.jpg";				
+			}
+		}
+	}
+
+};
+</script>
+<body>
+<div class="container">
+	<span id="com">总体评价：</span>
+	<ul id="stars">
+		<li><img src="light.jpg"></li>
+		<li><img src="light.jpg"></li>
+		<li><img src="light.jpg"></li>
+		<li><img src="light.jpg"></li>
+		<li><img src="light.jpg"></li>
+	</ul>
+	
+	<div id="des"></div>
+	<div id="alert"><img src="alert.jpg"></div>
+</div>
+</body>
+</html>
